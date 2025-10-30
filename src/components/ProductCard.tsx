@@ -25,16 +25,16 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   };
 
   return (
-    <Card className="modern-card group cursor-pointer backdrop-blur-sm bg-card/95">
+    <Card className="modern-card group cursor-pointer backdrop-blur-sm bg-white border border-gray-200">
       <div className="aspect-square overflow-hidden bg-muted/30 relative">
         {imageLoading && !imageError && (
-          <div className="animate-pulse bg-muted w-full h-full flex items-center justify-center">
-            <span className="text-muted-foreground text-sm">Loading...</span>
+          <div className="animate-pulse bg-gray-200 w-full h-full flex items-center justify-center">
+            <span className="text-gray-500 text-sm">Loading...</span>
           </div>
         )}
         {imageError ? (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground text-sm text-center p-4">
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-600 text-sm text-center p-4">
               Image not available<br />
               <small className="text-xs">{product.name}</small>
             </span>
@@ -57,19 +57,19 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       
       <div className="p-6">
         <div className="mb-4">
-          <h3 className="font-semibold text-foreground text-lg mb-2 line-clamp-1 group-hover:text-accent transition-colors">
+          <h3 className="font-semibold text-black text-lg mb-2 line-clamp-1 group-hover:text-accent transition-colors">
             {product.name}
           </h3>
-          <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
             {product.description}
           </p>
         </div>
         
         <div className="flex items-center justify-between mb-4">
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-2xl font-bold text-black">
             {formatCurrency(product.price)}
           </div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-gray-500">
             {product.stock > 0 ? `${product.stock} left` : 'Out of stock'}
           </div>
         </div>
@@ -77,7 +77,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         <Button
           onClick={() => onAddToCart(product.id)}
           disabled={product.stock === 0}
-          className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold tracking-wide transition-all duration-200 disabled:bg-muted disabled:text-muted-foreground"
+          className="w-full bg-black hover:bg-gray-800 text-white font-semibold tracking-wide transition-all duration-200 disabled:bg-gray-300 disabled:text-gray-500"
         >
           {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
         </Button>
