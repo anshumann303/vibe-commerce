@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatters';
 import type { Product } from '@/types/schema';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -9,35 +10,78 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const handleImageError = () => {
+    console.warn(`Failed to load image for ${product.name}:`, product.image);
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+    setImageError(false);
+  };
+
   return (
-    <Card className="flex flex-col h-full overflow-hidden transition-shadow hover:shadow-lg">
-      <div className="aspect-square overflow-hidden">
-        <img
-          src={product.image}
-          alt={`${product.name} - ${product.description}`}
-          className="h-full w-full object-cover transition-transform hover:scale-105"
-          style={{ width: '100%', height: '100%' }}
-        />
+    <Card className="modern-card group cursor-pointer backdrop-blur-sm bg-card/95">
+      <div className="aspect-square overflow-hidden bg-muted/30 relative">
+        {imageLoading && !imageError && (
+          <div className="animate-pulse bg-muted w-full h-full flex items-center justify-center">
+            <span className="text-muted-foreground text-sm">Loading...</span>
+          </div>
+        )}
+        {imageError ? (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+            <span className="text-muted-foreground text-sm text-center p-4">
+              Image not available<br />
+              <small className="text-xs">{product.name}</small>
+            </span>
+          </div>
+        ) : (
+          <img
+            src={product.image}
+            alt={`${product.name} - ${product.description}`}
+            className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+          />
+        )}
+        {product.stock <= 5 && product.stock > 0 && (
+          <div className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs font-semibold px-2 py-1 rounded">
+            LOW STOCK
+          </div>
+        )}
       </div>
-      <CardHeader className="flex-1">
-        <CardTitle className="line-clamp-1">{product.name}</CardTitle>
-        <CardDescription className="line-clamp-2">{product.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="price-text">{formatCurrency(product.price)}</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-        </p>
-      </CardContent>
-      <CardFooter>
+      
+      <div className="p-6">
+        <div className="mb-4">
+          <h3 className="font-semibold text-foreground text-lg mb-2 line-clamp-1 group-hover:text-accent transition-colors">
+            {product.name}
+          </h3>
+          <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
+        </div>
+        
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-2xl font-bold text-foreground">
+            {formatCurrency(product.price)}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {product.stock > 0 ? `${product.stock} left` : 'Out of stock'}
+          </div>
+        </div>
+        
         <Button
           onClick={() => onAddToCart(product.id)}
           disabled={product.stock === 0}
-          className="w-full"
+          className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold tracking-wide transition-all duration-200 disabled:bg-muted disabled:text-muted-foreground"
         >
-          Add to Cart
+          {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
         </Button>
-      </CardFooter>
+      </div>
     </Card>
   );
 }

@@ -1,6 +1,8 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { CartItem, Product } from '@/types/schema';
 import { mockProducts } from '@/data/productsMockData';
+import { api } from '@/services/api';
+
 
 interface CartContextType {
   items: CartItem[];
@@ -17,8 +19,43 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isOnline, setIsOnline] = useState(true);
 
-  const addToCart = useCallback((productId: string, quantity: number = 1) => {
+  // Sync with backend cart on mount
+  useEffect(() => {
+    const syncCart = async () => {
+      try {
+        const cartData = await api.cart.get();
+        // Backend cart structure might be different, adapt as needed
+        if (Array.isArray(cartData)) {
+          setItems(cartData);
+        }
+        setIsOnline(true);
+      } catch (error) {
+        console.warn('Failed to sync cart with backend, using local storage:', error);
+        setIsOnline(false);
+        // Load from localStorage as fallback
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+          try {
+            setItems(JSON.parse(savedCart));
+          } catch (e) {
+            console.warn('Failed to parse saved cart');
+          }
+        }
+      }
+    };
+
+    syncCart();
+  }, []);
+
+  // Save to localStorage when items change (offline fallback)
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
+
+  const addToCart = useCallback(async (productId: string, quantity: number = 1) => {
+    // Optimistic update
     setItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.productId === productId);
       
@@ -32,7 +69,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
       
       return [...prevItems, { productId, quantity }];
     });
-  }, []);
+
+    // Try to sync with backend
+    if (isOnline) {
+      try {
+        await api.cart.add(productId, quantity);
+      } catch (error) {
+        console.warn('Failed to sync cart addition with backend:', error);
+        setIsOnline(false);
+      }
+    }
+  }, [isOnline]);
 
   const updateCartItemQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity <= 0) {
@@ -47,9 +94,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const removeFromCart = useCallback((productId: string) => {
+  const removeFromCart = useCallback(async (productId: string) => {
+    // Optimistic update
     setItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
-  }, []);
+
+    // Try to sync with backend
+    if (isOnline) {
+      try {
+        await api.cart.remove(productId);
+      } catch (error) {
+        console.warn('Failed to sync cart removal with backend:', error);
+        setIsOnline(false);
+      }
+    }
+  }, [isOnline]);
 
   const clearCart = useCallback(() => {
     setItems([]);

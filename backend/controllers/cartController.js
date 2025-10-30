@@ -13,7 +13,8 @@ let currentCart = {
 // @access  Public
 const getCart = async (req, res) => {
   try {
-    res.json(currentCart);
+    // Return cart items in frontend format
+    res.json(currentCart.items);
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
   }
@@ -24,10 +25,15 @@ const getCart = async (req, res) => {
 // @access  Public
 const addToCart = async (req, res) => {
   try {
-    const { productId, qty } = req.body;
+    const { productId, quantity = 1 } = req.body;
     
-    // For mock data, use the productId format "product-X"
-    const mockIndex = parseInt(productId.split('-')[1]) - 1;
+    // Handle both frontend format (string IDs like "1", "2") and backend format ("product-1", "product-2")
+    let mockIndex;
+    if (productId.startsWith('product-')) {
+      mockIndex = parseInt(productId.split('-')[1]) - 1;
+    } else {
+      mockIndex = parseInt(productId) - 1;
+    }
     
     // Get mock product data
     if (mockIndex >= 0 && mockIndex < products.length) {
@@ -43,24 +49,16 @@ const addToCart = async (req, res) => {
       
       if (existingItemIndex >= 0) {
         // Update quantity if item exists
-        currentCart.items[existingItemIndex].qty += qty;
+        currentCart.items[existingItemIndex].quantity += quantity;
       } else {
-        // Add new item to cart
+        // Add new item to cart - use frontend format
         currentCart.items.push({
           productId,
-          name: productToAdd.name,
-          price: productToAdd.price,
-          image: productToAdd.image,
-          qty
+          quantity
         });
       }
       
-      // Recalculate total price
-      currentCart.totalPrice = currentCart.items.reduce(
-        (total, item) => total + item.price * item.qty, 0
-      );
-      
-      res.json(currentCart);
+      res.json({ message: 'Item added to cart', cart: currentCart });
     } else {
       return res.status(404).json({ message: 'Product not found' });
     }

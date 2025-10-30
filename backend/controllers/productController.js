@@ -4,33 +4,33 @@ const Product = require('../models/Product');
 const products = [
   {
     name: 'Wireless Headphones',
-    price: 99.99,
-    image: 'https://via.placeholder.com/150',
-    description: 'High-quality wireless headphones with noise cancellation'
+    price: 79.99,
+    image: 'https://images.unsplash.com/photo-1648447265709-67a4e785d7e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmVzJTIwd2lyZWxlc3MlMjB0ZWNobm9sb2d5fGVufDB8Mnx8fDE3NjE3Njk2MTF8MA&ixlib=rb-4.1.0&q=85',
+    description: 'Premium noise-cancelling wireless headphones with 30-hour battery life'
   },
   {
-    name: 'Smartphone',
-    price: 699.99,
-    image: 'https://via.placeholder.com/150',
-    description: 'Latest smartphone with advanced camera and long battery life'
+    name: 'Smart Watch',
+    price: 199.99,
+    image: 'https://images.unsplash.com/photo-1697490057407-34c996cab84f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwyfHxzbWFydHdhdGNoJTIwZml0bmVzcyUyMHdlYXJhYmxlfGVufDB8Mnx8fDE3NjE3Njk2MTF8MA&ixlib=rb-4.1.0&q=85',
+    description: 'Fitness tracking smartwatch with heart rate monitor and GPS'
   },
   {
-    name: 'Laptop',
-    price: 1299.99,
-    image: 'https://via.placeholder.com/150',
-    description: 'Powerful laptop for work and gaming'
+    name: 'Running Shoes',
+    price: 89.99,
+    image: 'https://images.unsplash.com/photo-1645106281638-79585657aa4e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwc2hvZXMlMjBzbmVha2VycyUyMHNwb3J0c3xlbnwwfDJ8fHwxNzYxNzY5NjExfDA&ixlib=rb-4.1.0&q=85',
+    description: 'Lightweight running shoes with superior cushioning and support'
   },
   {
-    name: 'Smartwatch',
-    price: 249.99,
-    image: 'https://via.placeholder.com/150',
-    description: 'Fitness tracking smartwatch with heart rate monitor'
-  },
-  {
-    name: 'Wireless Earbuds',
+    name: 'Leather Backpack',
     price: 129.99,
-    image: 'https://via.placeholder.com/150',
-    description: 'Compact wireless earbuds with charging case'
+    image: 'https://images.unsplash.com/photo-1691480250099-a63081ecfcb8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw1fHxiYWNrcGFjayUyMGxlYXRoZXIlMjBiYWd8ZW58MHwyfHx8MTc2MTc2OTYxMXww&ixlib=rb-4.1.0&q=85',
+    description: 'Stylish leather backpack with laptop compartment and multiple pockets'
+  },
+  {
+    name: 'Coffee Maker',
+    price: 149.99,
+    image: 'https://images.unsplash.com/photo-1637029680169-8304d6a10816?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwyfHxjb2ZmZWUlMjBtYWtlciUyMGFwcGxpYW5jZSUyMGtpdGNoZW58ZW58MHwyfHx8MTc2MTc2OTYxMXww&ixlib=rb-4.1.0&q=85',
+    description: 'Programmable coffee maker with thermal carafe and auto-brew feature'
   }
 ];
 
