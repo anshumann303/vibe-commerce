@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 
 export function ProductsGrid() {
   const { addToCart } = useCart();
-  const { products, loading, error } = useProducts();
+  const { products, loading } = useProducts();
   const [searchParams] = useSearchParams();
   const categoryFilter = searchParams.get('category');
 

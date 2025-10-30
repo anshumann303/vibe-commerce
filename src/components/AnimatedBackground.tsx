@@ -15,7 +15,7 @@ interface GradientCircle {
 }
 
 export function AnimatedBackground() {
-  const { scrollY, getCombinedTransform } = useScrollAnimation();
+  const { getCombinedTransform } = useScrollAnimation();
   const [circles] = useState<GradientCircle[]>(() => {
     // Generate random circles with soft pastel colors
     const pastelColors = [

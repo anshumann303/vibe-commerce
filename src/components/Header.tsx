@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ShoppingCart, Search, Menu, User, ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { useScrollToSection } from '@/utils/navigation';
 export function Header() {
   const { itemCount } = useCart();
   const scrollToSection = useScrollToSection();
-  const location = useLocation();
+
 
   const handleAboutClick = (e: React.MouseEvent) => {
     e.preventDefault();
